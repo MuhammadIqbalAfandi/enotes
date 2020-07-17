@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_all_note"
+        android:title="@string/all_note" />
+    <item
+        android:id="@+id/menu_pin_note"
+        android:title="@string/pin_note" />
+    <item
+        android:id="@+id/menu_encryption_note"
+        android:title="@string/encryption_note"/>
+</menu>

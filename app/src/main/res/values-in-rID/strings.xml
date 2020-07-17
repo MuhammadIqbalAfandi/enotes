@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_encryption_key">
+        Ketika anda memberikan key, isi catatan anda akan dienkripsi.
+        Demi keamanan kami menyarankan anda menggunakan tombol menghasilkan kunci,
+        meskipun kami memberikan akses untuk anda menuliskan kunci anda sendiri.
+        anda perlu untuk mengekport kunci untuk anda gunakan kembali untuk mendekripsi catatan.
+    </string>
+    <string name="message_error_all_white_space">
+        Kunci yang kamu tulikan semua spasi,\n itu tidak diizinkan.
+    </string>
+</resources>

@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:layout="@layout/pref_title_category"
+        app:allowDividerBelow="false"
+        app:iconSpaceReserved="false"
+        app:title="@string/display_option_title">
+        <com.muhammadiqbalafandi.enotes.ui.customview.preference.theme.ThemePreferences
+            app:allowDividerBelow="true"
+            app:key="preferences_theme_app"
+            app:layout="@layout/pref_item_theme"
+            app:title="@string/theme" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

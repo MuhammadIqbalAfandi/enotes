@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name" translatable="false">ENotes</string>
+    <string name="settings">Settings</string>
+    <string name="search_note">Search Note</string>
+    <string name="filter">Filter</string>
+    <string name="new_note">New Note</string>
+    <string name="note_detail">Note Details</string>
+    <string name="all_note">All Note</string>
+    <string name="no_note_all">You have no note!</string>
+    <string name="date">Date</string>
+    <string name="note_list">Note List</string>
+    <string name="more_options">More Options</string>
+    <string name="encryption_text">Encryption Text</string>
+    <string name="encryption_text_active">Encryption Text Active</string>
+    <string name="key">Key</string>
+    <string name="delete">Delete</string>
+    <string name="export">Export</string>
+    <string name="cancel">Cancel</string>
+    <string name="options">Options</string>
+    <string name="menu">Menu</string>
+    <string name="pin">Pin</string>
+    <string name="pin_note">Pin Note</string>
+    <string name="no_note_pin">You have no pin note!</string>
+    <string name="unpin">Unpin</string>
+    <string name="oke">Oke</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="set_by_battery_serve">Set by Battery Saver</string>
+    <string name="system_default">System default</string>
+    <string name="display_option_title">DISPLAY OPTION</string>
+    <string name="about_privileges">About Encryption Text</string>
+    <string name="note_saved">Note saved</string>
+    <string name="note_added">Note added</string>
+    <string name="deleted_note">Note was deleted</string>
+    <string name="edit_note">Edit Note</string>
+    <string name="no_note">Empty note discarded</string>
+    <string name="encryption_note">Encryption Note</string>
+    <string name="no_encryption_note">You have no encryption note!</string>
+    <string name="no_data">No data</string>
+    <string name="no_body">Body cannot be empty</string>
+
+    <string name="dialog_title_not_save_encryption_key">Remove Encryption Key</string>
+    <string name="dialog_message_not_save_encryption_key">By saving the key, your notes will not be encrypted</string>
+    <string name="dialog_title_new_encryption_key">New Encryption Key</string>
+    <string name="dialog_message_new_encryption_key">New Encryption Key found, do you want to use it.</string>
+    <string name="about_encryption_key">
+        When you provide a key, the contents of your notes will be encrypted.
+        For security reasons We recommend that you use the key generate key,
+        although we give you access to write your own key.
+        You need to export the key for you to use again to decrypt the note.
+    </string>
+    <string name="message_error_all_white_space">
+        The key that you wrote down is all white space,\n it\'s not allowed.
+    </string>
+    <string name="message_error_null">Key Null it\'s not allowed.</string>
+    <string name="permission_title">Storage Permission Required</string>
+    <string name="permission_description">To can export file apps need access internal storage</string>
+
+
+    <string name="search_hint">Write here</string>
+    <string name="edit_text_title_hint">Title</string>
+    <string name="edit_text_body_hint">Body</string>
+    <string name="edit_text_security_key_hint">Key</string>
+
+    <string name="button_encryption_txt">Text Encryption</string>
+    <string name="button_generate_key">Generate Key</string>
+    <string name="button_import_key">Import Key</string>
+    <string name="button_export_key">Export Key</string>
+
+    <string name="content_description_empty_note">Empty image</string>
+    <string name="content_description_search_not_found">Search Not Found</string>
+    <string name="content_description_search">Search</string>
+    <string name="content_description_close">Close</string>
+    <string name="content_description_delete">Delete</string>
+    <string name="content_description_back">Back</string>
+    <string name="content_description_fab_create">Create Note</string>
+    <string name="content_description_export">Export</string>
+
+    <string name="message_empty_bookmark">Empty Pin</string>
+    <string name="message_search">Search your notes</string>
+    <string name="message_select_theme">Select Theme</string>
+
+    <string name="loading_note_error">Error while loading note</string>
+</resources>
