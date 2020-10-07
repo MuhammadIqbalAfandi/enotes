@@ -1,5 +1,7 @@
 package com.muhammadiqbalafandi.enotes.ui.note
 
+import android.app.Application
+import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
@@ -9,15 +11,21 @@ import com.muhammadiqbalafandi.enotes.data.Result
 import com.muhammadiqbalafandi.enotes.data.Result.Success
 import com.muhammadiqbalafandi.enotes.data.source.NoteRepository
 import com.muhammadiqbalafandi.enotes.data.source.local.Note
+import com.muhammadiqbalafandi.enotes.databinding.FragNoteBinding
+import com.muhammadiqbalafandi.enotes.databinding.ListItemNoteBinding
 import com.muhammadiqbalafandi.enotes.ui.note.NoteFilterType.*
 import kotlinx.coroutines.launch
 
 class NoteViewModel(
     private val noteRepository: NoteRepository,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+    application: Application
+) : AndroidViewModel(application) {
 
-    private val _forceUpdate = MutableLiveData<Boolean>(false)
+    // Used in this class.
+    // private val context: Application = getApplication()
+
+    private val _forceUpdate = MutableLiveData(false)
 
     private val _items: LiveData<List<Note>> = _forceUpdate.switchMap { forceUpdate ->
         if (forceUpdate) {
@@ -26,17 +34,28 @@ class NoteViewModel(
                 noteRepository.refreshNote()
                 _dataLoading.value = false
             }
+
         }
         noteRepository.observeNote().distinctUntilChanged().switchMap { filterNote(it) }
     }
+
+    private var resultMessageShown: Boolean = false
+
+    /**
+     * Used directly in [FragNoteBinding].
+     */
+    val searchQuery = MutableLiveData<String>()
+
     val items: LiveData<List<Note>> = _items
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
+    val empty: LiveData<Boolean> = Transformations.map(_items) {
+        it.isEmpty()
+    }
 
+    // Set resource, such string, icon.
     private val _currentFilteringLabel = MutableLiveData<Int>()
     val currentFilteringLabel: LiveData<Int> = _currentFilteringLabel
 
@@ -46,21 +65,25 @@ class NoteViewModel(
     private val _noNoteIconRes = MutableLiveData<Int>()
     val noNoteIconRes: LiveData<Int> = _noNoteIconRes
 
-    // Not used at the moment.
-    private val isDataLoadingError = MutableLiveData<Boolean>()
-
-    private val _openNoteEvent = MutableLiveData<Event<String>>()
-    val openNoteEvent: LiveData<Event<String>> = _openNoteEvent
-
-    private val _addNewNote = MutableLiveData<Event<Unit>>()
-    val  addNewNote: LiveData<Event<Unit>> = _addNewNote
-
-    private var resultMessageShown: Boolean = false
-
-    // This LiveData depends on another so we can use a transformation.
-    val empty: LiveData<Boolean> = Transformations.map(_items) {
-        it.isEmpty()
+    // Used in fragment to listen changed.
+    val searchResult: LiveData<List<Note>> = Transformations.switchMap(searchQuery) {
+        noteRepository.observeSearchNote("%${it}%")
     }
+
+    private val _snackbarText = MutableLiveData<Event<Int>>()
+    val snackbarText: LiveData<Event<Int>> = _snackbarText
+
+    private val _goToDetailNoteEvent = MutableLiveData<Event<String>>()
+    val goToDetailNoteEvent: LiveData<Event<String>> = _goToDetailNoteEvent
+
+    private val _goToAddNewNoteEvent = MutableLiveData<Event<Unit>>()
+    val goToAddNewNoteEvent: LiveData<Event<Unit>> = _goToAddNewNoteEvent
+
+    private val _popupMenu = MutableLiveData<Event<View>>()
+    val popupMenu: LiveData<Event<View>> = _popupMenu
+
+    private val _goToActivitySettingEvent = MutableLiveData<Event<Unit>>()
+    val goToActivitySettingEvent: LiveData<Event<Unit>> = _goToActivitySettingEvent
 
     init {
         // Set initial state.
@@ -68,18 +91,69 @@ class NoteViewModel(
         loadNote(true)
     }
 
-    /**
-     * Called when the FAB's click listener.
-     */
-    fun addNewNote() {
-        _addNewNote.value = Event(Unit)
+    private fun filterNote(noteResult: Result<List<Note>>): LiveData<List<Note>> {
+        // TODO: This is a good case for liveData builder. Replace when stable.
+        val result = MutableLiveData<List<Note>>()
+
+        if (noteResult is Success) {
+            viewModelScope.launch {
+                result.value = filterItems(noteResult.data, getSavedFilterType())
+            }
+        } else {
+            result.value = emptyList()
+            showSnackbarMessage(R.string.snackbar_message_loading_note_error)
+        }
+
+        return result
+    }
+
+    private fun filterItems(notes: List<Note>, filteringType: NoteFilterType): List<Note> {
+        val noteToShow = ArrayList<Note>()
+        // We filter the note based on the requestType
+        for (note in notes) {
+            when (filteringType) {
+                ALL_NOTE -> {
+                    noteToShow.add(note)
+                }
+                PIN_NOTE -> if (note.pin) {
+                    noteToShow.add(note)
+                }
+                ENCRYPTION_NOTE -> if (!note.encryptionKey.isNullOrEmpty()) {
+                    noteToShow.add(note)
+                }
+            }
+        }
+        return noteToShow
+    }
+
+    private fun getSavedFilterType(): NoteFilterType {
+        return savedStateHandle.get(NOTE_FILTER_SAVED_STATE_KEY) ?: ALL_NOTE
     }
 
     /**
-     * Called by Data Binding.
+     * Used directly in [FragNoteBinding].
+     */
+    fun addNewNote() {
+        _goToAddNewNoteEvent.value = Event(Unit)
+    }
+
+    fun showPopupMenu(view: View) {
+        _popupMenu.value = Event(view)
+    }
+
+    fun goToActivitySetting() {
+        _goToActivitySettingEvent.value = Event(Unit)
+    }
+
+    fun refresh() {
+        _forceUpdate.value = true
+    }
+
+    /**
+     * Used directly in [ListItemNoteBinding].
      */
     fun openNote(noteId: String) {
-        _openNoteEvent.value = Event(noteId)
+        _goToDetailNoteEvent.value = Event(noteId)
     }
 
     /**
@@ -95,23 +169,23 @@ class NoteViewModel(
         when (requestType) {
             ALL_NOTE -> {
                 setFilter(
-                    R.string.all_note,
-                    R.string.no_note_all,
-                    R.drawable.ic_baseline_list
+                    R.string.filter_title_all_note,
+                    R.string.message_error_no_note,
+                    R.drawable.ic_twotone_list
                 )
             }
             PIN_NOTE -> {
                 setFilter(
-                    R.string.pin_note,
-                    R.string.no_note_pin,
-                    R.drawable.ic_baseline_pin
+                    R.string.filter_title_pin_note,
+                    R.string.message_error_no_note_pin,
+                    R.drawable.ic_twotone_pin
                 )
             }
             ENCRYPTION_NOTE -> {
                 setFilter(
-                    R.string.encryption_note,
-                    R.string.no_encryption_note,
-                    R.drawable.ic_baseline_encryption
+                    R.string.message_error_encryption_note,
+                    R.string.message_error_no_encryption_note,
+                    R.drawable.ic_twotone_lock
                 )
             }
         }
@@ -130,70 +204,30 @@ class NoteViewModel(
     }
 
     /**
-     * @param forceUpdate pass in true to refresh the data in the [NoteDataSource]
+     * @param forceUpdate pass in true to refresh the data in the NoteDataSource.
      */
     private fun loadNote(forceUpdate: Boolean) {
         _forceUpdate.value = forceUpdate
     }
 
-    fun refresh() {
-        _forceUpdate.value = true
-    }
-
-    private fun filterNote(noteResult: Result<List<Note>>): LiveData<List<Note>> {
-        // TODO: This is a good case for liveData builder. Replace when stable.
-        val result = MutableLiveData<List<Note>>()
-
-        if (noteResult is Success) {
-            isDataLoadingError.value = false
-            viewModelScope.launch {
-                result.value = filterItems(noteResult.data, getSavedFilterType())
-            }
-        } else {
-            result.value = emptyList()
-            showSnackbarMessage(R.string.loading_note_error)
-            isDataLoadingError.value = true
-        }
-
-        return result
-    }
-
+    /**
+     * Used directly in [NoteFragment].
+     */
     fun showEditResultMessage(result: Int) {
         if (resultMessageShown) return
         when (result) {
-            EDIT_RESULT_OK -> showSnackbarMessage(R.string.note_saved)
-            ADD_EDIT_RESULT_OK -> showSnackbarMessage(R.string.note_added)
-            DELETE_RESULT_OK -> showSnackbarMessage(R.string.deleted_note)
-            NO_SAVE_RESULT_OK -> showSnackbarMessage(R.string.no_note)
+            EDIT_RESULT_OK -> showSnackbarMessage(R.string.snackbar_message_note_saved)
+            ADD_RESULT_OK -> showSnackbarMessage(R.string.snackbar_message_note_added)
+            DELETE_RESULT_OK -> showSnackbarMessage(R.string.snackbar_message_deleted_note)
+            NO_SAVE_RESULT_OK -> showSnackbarMessage(R.string.snackbar_message_note_discarded)
         }
         resultMessageShown = true
     }
 
-    private fun showSnackbarMessage(message: Int) {
+    private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)
-    }
-
-    private fun filterItems(notes: List<Note>, filteringType: NoteFilterType): List<Note> {
-        val noteToShow = ArrayList<Note>()
-        // We filter the note based on the requestType
-        for (note in notes) {
-            when (filteringType) {
-                ALL_NOTE -> noteToShow.add(note)
-                PIN_NOTE -> if (note.pin) {
-                    noteToShow.add(note)
-                }
-                ENCRYPTION_NOTE -> if (!note.encryptionKey.isNullOrEmpty()) {
-                    noteToShow.add(note)
-                }
-            }
-        }
-        return noteToShow
-    }
-
-    private fun getSavedFilterType(): NoteFilterType {
-        return savedStateHandle.get(NOTE_FILTER_SAVED_STATE_KEY) ?: ALL_NOTE
     }
 }
 
-// Used to save the current filtering in SavedStateHandle.
+// Used as key SavedStateHandle, to filtering notes.
 const val NOTE_FILTER_SAVED_STATE_KEY = "NOTE_FILTER_SAVED_STATE_KEY"

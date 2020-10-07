@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.muhammadiqbalafandi.enotes.ui.detail.NoteDetailActionType" />
+
+        <variable
+            name="viewModel"
+            type="com.muhammadiqbalafandi.enotes.ui.detail.NoteDetailViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/group_title_top"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_group_title_options"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_group_title_top"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_header_edit_detail_note"
+                style="@style/AppMaterialButton.Icon.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.whetherTheNoteIsEncrypted(NoteDetailActionType.EDIT_NOTE)}"
+                android:text="@string/menu_title_edit_note"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:icon="@drawable/ic_twotone_edit"
+                app:iconGravity="end" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_header_decryption_detail_note"
+                style="@style/AppMaterialButton.Icon.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.whetherTheNoteIsEncrypted(NoteDetailActionType.DECRYPTION_NOTE)}"
+                android:text="@string/menu_title_decryption_note"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:visibility="@{viewModel.isDecryptionNote ? View.VISIBLE : View.GONE}"
+                app:icon="@drawable/ic_twotone_lock"
+                app:iconGravity="end" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_header_delete_detail_note"
+                style="@style/AppMaterialButton.Icon.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.whetherTheNoteIsEncrypted(NoteDetailActionType.DELETE_NOTE)}"
+                android:text="@string/menu_title_delete_note"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:icon="@drawable/ic_twotone_delete"
+                app:iconGravity="end" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

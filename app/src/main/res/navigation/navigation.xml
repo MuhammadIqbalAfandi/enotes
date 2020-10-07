@@ -2,12 +2,10 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation"
     app:startDestination="@id/noteFragment">
     <fragment
         android:id="@+id/noteFragment"
         android:name="com.muhammadiqbalafandi.enotes.ui.note.NoteFragment"
-        android:label="@string/app_name"
         tools:layout="@layout/frag_note">
         <argument
             android:name="userMessage"
@@ -15,35 +13,31 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_noteFragment_to_addEditNoteFragment"
-            app:destination="@id/addEditNoteFragment" />
-        <action
-            android:id="@+id/action_noteFragment_to_searchNoteFragment"
-            app:destination="@id/searchNoteFragment" />
+            app:destination="@id/addEditNoteFragment"
+            app:launchSingleTop="false" />
         <action
             android:id="@+id/action_noteFragment_to_noteDetailFragment"
-            app:destination="@id/noteDetail" />
+            app:destination="@id/noteDetail"
+            app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_noteFragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
     </fragment>
     <fragment
-        android:id="@+id/searchNoteFragment"
-        android:name="com.muhammadiqbalafandi.enotes.ui.searchnote.SearchNoteFragment"
-        android:label="@string/search_note"
-        tools:layout="@layout/frag_search_note" />
-    <fragment
         android:id="@+id/addEditNoteFragment"
-        android:name="com.muhammadiqbalafandi.enotes.ui.addeditnote.AddEditNoteFragment"
-        android:label="{title}"
+        android:name="com.muhammadiqbalafandi.enotes.ui.addedit.AddEditNoteFragment"
         tools:layout="@layout/frag_add_edit_note">
         <action
             android:id="@+id/action_addNoteFragment_to_encryptionTextFragment"
-            app:destination="@id/encryptionTextFragment" />
+            app:destination="@id/encryptionTextFragment"
+            app:popUpToInclusive="false" />
         <argument
             android:name="noteId"
             app:argType="string"
             app:nullable="true" />
         <argument
-            android:name="title"
-            app:argType="string"
-            app:nullable="false" />
+            android:name="toolbalTitle"
+            app:argType="string" />
         <action
             android:id="@+id/action_addEditNoteFragment_to_noteFragment"
             app:destination="@id/noteFragment"
@@ -52,14 +46,8 @@
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.muhammadiqbalafandi.enotes.ui.settings.SettingsFragment"
-        android:label="@string/settings"
-        tools:layout="@layout/frag_settings" />
-    <fragment
         android:id="@+id/encryptionTextFragment"
-        android:name="com.muhammadiqbalafandi.enotes.ui.encryptiontextnote.EncryptionTextFragment"
-        android:label="@string/encryption_note"
+        android:name="com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionTextFragment"
         tools:layout="@layout/frag_encryption_text">
         <action
             android:id="@+id/action_encryptionTextFragment_to_addEditNoteFragment"
@@ -74,8 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/noteDetail"
-        android:name="com.muhammadiqbalafandi.enotes.ui.detailnote.NoteDetailFragment"
-        android:label="@string/note_detail"
+        android:name="com.muhammadiqbalafandi.enotes.ui.detail.NoteDetailFragment"
         tools:layout="@layout/frag_detail_note">
         <argument
             android:name="noteId"
@@ -83,9 +70,15 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_noteDetailFragment_to_addEditNoteFragment"
-            app:destination="@id/addEditNoteFragment" />
+            app:destination="@id/addEditNoteFragment"
+            app:launchSingleTop="false"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_noteDetail_to_noteFragment"
             app:destination="@id/noteFragment" />
     </fragment>
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.muhammadiqbalafandi.enotes.ui.settings.SettingsActivity"
+        tools:layout="@layout/act_settings" />
 </navigation>

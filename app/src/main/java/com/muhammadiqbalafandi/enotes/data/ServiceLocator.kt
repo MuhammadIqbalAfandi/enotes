@@ -17,7 +17,11 @@ object ServiceLocator {
     }
 
     private fun createNoteRepository(context: Context): NoteRepository {
-        return DefaultNoteRepository(createNoteLocalDataSource(context), createNoteLocalDataSource(context))
+        return DefaultNoteRepository(
+            // TODO: 01/10/20 change to the actual remote data source
+            createNoteLocalDataSource(context),
+            createNoteLocalDataSource(context)
+        )
     }
 
     private fun createNoteLocalDataSource(context: Context): NoteDataSource {

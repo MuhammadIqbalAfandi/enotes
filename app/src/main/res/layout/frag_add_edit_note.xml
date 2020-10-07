@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.muhammadiqbalafandi.enotes.ui.addeditnote.AddEditNoteViewModel" />
+            type="com.muhammadiqbalafandi.enotes.ui.addedit.AddEditNoteViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout_addedit_note"
+        android:id="@+id/drawer_addedit_note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:openDrawer="end">
@@ -20,46 +20,73 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/refresh_layout_add_edit_note"
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:enabled="@{viewModel.dataLoading}"
-                app:refreshing="@{viewModel.dataLoading}">
+                android:layout_height="wrap_content">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar_add_edit_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_add_edit_note"
+                android:layout_width="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_height="match_parent">
+
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <androidx.core.widget.NestedScrollView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <LinearLayout
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/AppTextField.Note"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            app:hintEnabled="false">
 
-                            <com.muhammadiqbalafandi.enotes.ui.customview.EnoteEditText
+                            <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_title_addedit_note"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/edit_text_title_hint"
+                                android:hint="@string/text_field_hint_write_title"
+                                android:inputType="text|textMultiLine|textNoSuggestions"
                                 android:text="@={viewModel.title}"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                                tools:text="@string/text_field_hint_write_title" />
 
-                            <com.muhammadiqbalafandi.enotes.ui.customview.EnoteEditText
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/AppTextField.Note"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_body_addedit_note"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/edit_text_body_hint"
+                                android:hint="@string/text_field_write_body"
+                                android:inputType="text|textMultiLine|textNoSuggestions"
                                 android:text="@={viewModel.body}"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                tools:text="@tools:sample/lorem/random" />
 
-                        </LinearLayout>
-                    </androidx.core.widget.NestedScrollView>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_add_edit_note"
@@ -67,10 +94,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
                 android:onClick="@{() -> viewModel.saveNote()}"
-                app:fabSize="normal"
-                app:layout_anchor="@id/refresh_layout_add_edit_note"
+                app:layout_anchor="@id/constraint_add_edit_note"
                 app:layout_anchorGravity="bottom|right|end"
-                app:srcCompat="@drawable/ic_baseline_create" />
+                app:srcCompat="@drawable/ic_twotone_done" />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.navigation.NavigationView
@@ -78,6 +105,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            app:menu="@menu/drawer_add_edit_note" />
+            app:headerLayout="@layout/nav_header_add_edit_note" />
+
     </androidx.drawerlayout.widget.DrawerLayout>
+
 </layout>

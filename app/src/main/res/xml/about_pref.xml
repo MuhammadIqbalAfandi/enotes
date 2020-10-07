@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/developer_info">
+
+        <Preference
+            app:summary="@string/developer_name"
+            app:title="@string/developer_title_name" />
+
+        <Preference
+            app:icon="@drawable/ic_twotone_email"
+            app:summary="@string/developer_email"
+            app:title="@string/developer_title_email" />
+
+        <Preference
+            app:summary="@string/developer_summary_github"
+            app:title="@string/developer_title_github">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/MuhammadIqbalAfandi" />
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

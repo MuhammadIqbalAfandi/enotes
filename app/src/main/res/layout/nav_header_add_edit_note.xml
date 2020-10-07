@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="viewModel"
+            type="com.muhammadiqbalafandi.enotes.ui.addedit.AddEditNoteViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/group_title_top"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_group_title_options"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_group_title_top"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_header_pin_add_edit_note"
+                style="@style/AppMaterialButton.Icon.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.pin() }"
+                android:text="@{context.getString(viewModel.pinStringRes)}"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:icon="@drawable/ic_twotone_pin"
+                app:iconGravity="end"
+                tools:text="@string/menu_title_pin" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_header_encryption_add_edit_note"
+                style="@style/AppMaterialButton.Icon.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.goToEncryptionNote()}"
+                android:text="@{context.getString(viewModel.encryptionStringRes)}"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:icon="@drawable/ic_twotone_lock"
+                app:iconGravity="end"
+                tools:text="@string/menu_title_encryption_text" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_header_delete_add_edit_note"
+                style="@style/AppMaterialButton.Icon.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.showDialogDeleteNote()}"
+                android:text="@string/menu_title_delete_note"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:icon="@drawable/ic_twotone_delete"
+                app:iconGravity="end" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

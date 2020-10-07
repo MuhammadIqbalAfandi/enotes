@@ -7,10 +7,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.muhammadiqbalafandi.enotes.data.source.NoteRepository
-import com.muhammadiqbalafandi.enotes.ui.addeditnote.AddEditNoteViewModel
+import com.muhammadiqbalafandi.enotes.ui.addedit.AddEditNoteViewModel
+import com.muhammadiqbalafandi.enotes.ui.detail.NoteDetailViewModel
+import com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionTextViewModel
 import com.muhammadiqbalafandi.enotes.ui.note.NoteViewModel
-import com.muhammadiqbalafandi.enotes.ui.detailnote.NoteDetailViewModel
-import com.muhammadiqbalafandi.enotes.ui.encryptiontextnote.EncryptionTextViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(
@@ -32,10 +32,12 @@ class ViewModelFactory(
             )
             isAssignableFrom(NoteViewModel::class.java) -> NoteViewModel(
                 noteRepository,
-                handle
+                handle,
+                application
             )
             isAssignableFrom(NoteDetailViewModel::class.java) -> NoteDetailViewModel(
-                noteRepository
+                noteRepository,
+                application
             )
             isAssignableFrom(EncryptionTextViewModel::class.java) -> EncryptionTextViewModel(
                 application

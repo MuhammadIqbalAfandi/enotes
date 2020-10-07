@@ -1,12 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about_encryption_key">
-        Ketika anda memberikan key, isi catatan anda akan dienkripsi.
-        Demi keamanan kami menyarankan anda menggunakan tombol menghasilkan kunci,
-        meskipun kami memberikan akses untuk anda menuliskan kunci anda sendiri.
-        anda perlu untuk mengekport kunci untuk anda gunakan kembali untuk mendekripsi catatan.
-    </string>
+    <!--  Text field  hint  -->
+    <string name="text_field_hint_key">Kunci</string>
+    <string name="text_field_hint_write_title">Judul</string>
+    <string name="text_field_write_body">Catatan</string>
+    <string name="text_field_hint_search_note">Temukan catatan kamu</string>
+
+    <!--  Button text  -->
+    <string name="button_text_import_key">Impor Kunci</string>
+    <string name="button_text_generate_key">Kunci Acak</string>
+    <string name="button_text_export_key">Ekspor Kunci</string>
+
+    <!--  Message success and error  -->
+    <!--  Success  -->
+    <string name="message_success_export_key">Ekspor kunci sukses</string>
+    <!--  Error  -->
     <string name="message_error_all_white_space">
-        Kunci yang kamu tulikan semua spasi,\n itu tidak diizinkan.
+        Semua spasi,\n itu tidak diizinkan.
     </string>
+    <string name="message_error_no_note">Kamu tidak memiliki catatan!</string>
+    <string name="message_error_no_note_pin">Kamu tidak memiliki penting catatan!</string>
+    <string name="message_error_encryption_note">Enkripsi Catatan</string>
+    <string name="message_error_no_encryption_note">Kamu tidak memiliki catatan enkripsi!</string>
+    <string name="message_error_no_data">Tidak ada data</string>
+    <string name="message_error_no_body">Catatan Kosong</string>
+    <string name="message_error_import_key">Kunci salah</string>
+
+    <!--  Snackbar message  -->
+    <string name="snackbar_message_note_saved">Catatan diubah</string>
+    <string name="snackbar_message_note_added">Catatan ditambahkan</string>
+    <string name="snackbar_message_deleted_note">Catatan telah dihapus</string>
+    <string name="snackbar_message_edit_note">Ubah Catatan</string>
+    <string name="snackbar_message_note_discarded">Catatan kosong dibuang</string>
+    <string name="snackbar_message_loading_note_error">Kesalahan ketika catatan dimuat</string>
+
+    <!--  Dialog title and message  -->
+    <string name="dialog_title_delete_note">Hapus Catatan?</string>
+    <string name="dialog_message_delete_note">Catatan akan dihapus secara permanen</string>
+
+    <string name="dialog_title_decryption_note">Impor Kunci</string>
+    <string name="dialog_message_decryption_note">
+       Catatan dienkripsi, silahkan impor kunci
+    </string>
+    <string name="dialog_title_not_save_encryption_key">Hapus kunci enkripsi</string>
+    <string name="dialog_message_not_save_encryption_key">Tidak ada kunci, catatan kamu tidak akan dienkripsi</string>
+    <string name="dialog_title_new_encryption_key">Kunci enkripsi baru</string>
+    <string name="dialog_message_new_encryption_key">Kunci enkripsi baru ditemukan, apakah kamu ingin menyimpannya.</string>
+
+    <!--  Radio Title  -->
+    <string name="theme_light">Terang</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="theme_default_system">Setel berdasarkan Penghemat Baterai</string>
+    <string name="theme_auto_battery">Pengaturan sistem</string>
+
+    <!--  Dialog button text  -->
+    <!--  Button positive  -->
+    <string name="dialog_positive_text_go_to_settings">Pergi ke pengaturan</string>
+
+    <!--  About  -->
+    <string name="about_title_encryption_text">Penting</string>
+    <string name="about_description_encryption_text">Ketika kamu menginputkan kunci, konten catatan kamu akan dienkripsi.
+        Untuk alasan keamanan kami menyarankan anda menggunakan kunci acak yang telah kami sediahkan,
+            meskipun kami memberikan kamu akses untuk menginputkan kunci kamu sendiri.
+        Kamu perlu mengekspor kunci catatan untuk digunakan kembali pada dekripsi catatan.
+    </string>
+
+    <!--  Preferences title  -->
+    <string name="preferences_summary_developer_info">Menampilkan informasi nama, kontak dll.</string>
+    <string name="preferences_title_theme">Tema</string>
+    <string name="preferences_title_display_options">Pengaturan Tampilan</string>
+    <string name="preferences_title_about">Tentang</string>
+
+    <!--  Filter title  -->
+    <string name="filter_title_all_note">Semua Catatan</string>
+    <string name="filter_title_pin_note">Catatan Pin</string>
+
+    <string name="title_fragment_add_edit_note">Catatan Baru</string>
+    <string name="title_fragment_note_detail">Detail Catatan</string>
+    <string name="title_activity_settings">Pengaturan</string>
+
+    <!--  Menu title  -->
+    <string name="menu_group_title_options">Pengaturan</string>
+
+    <string name="menu_title_encryption_text">Enkripsi Catatan</string>
+    <string name="menu_title_encryption_text_active">Enkripsi Teks Aktif</string>
+    <string name="menu_title_delete_note">Hapus</string>
+    <string name="menu_title_decryption_note">Dekripsi Catatan (hanya baca)</string>
+    <string name="menu_title_edit_note">Ubah Catatan</string>
+    <string name="menu_title_menu">Menu</string>
+    <string name="menu_title_pin">Pin</string>
+    <string name="menu_title_unpin">Unpin</string>
+
+    <!--  Permission title and description  -->
+    <!--  title  -->
+    <string name="permission_title_storage">Memintah izin menggunakan ruang penyimpanan</string>
+    <!--  description  -->
+    <string name="permission_description_storage">To dapat menggunakan fitur ini, aplikasi perlu mengakses penyimpanan internal</string>
+
+    <!--  Content description  -->
+    <string name="content_description_empty_note">Gambar catatan kosong</string>
+    <string name="content_description_search_note">Cari catatan</string>
+
+    <!--  Developer Info  -->
+    <string name="developer_info">Informasi Pengembang</string>
+    <string name="developer_title_name">Nama</string>
+    <string name="developer_name">Muhammad Iqbal Afandi</string>
+    <string name="developer_title_email">Email</string>
+    <string name="developer_email">muhammadiqbalafandi30@gmail.com</string>
+    <string name="developer_title_github">Github</string>
+    <string name="developer_summary_github">Saya sangat senang jika ada ikut berkontribusi dalam mengembangkan aplikasi ini.</string>
 </resources>

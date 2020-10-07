@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/preferences_title_about">
+
+        <Preference
+            app:fragment="com.muhammadiqbalafandi.enotes.ui.settings.SettingsActivity$DeveloperInfoPreferenceFragment"
+            app:icon="@drawable/ic_twotone_developer_info"
+            app:summary="@string/preferences_summary_developer_info"
+            app:title="@string/developer_info" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

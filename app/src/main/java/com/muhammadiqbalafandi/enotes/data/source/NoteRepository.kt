@@ -13,13 +13,7 @@ interface NoteRepository {
 
     fun observerNote(noteId: String): LiveData<Result<Note>>
 
-    fun observeSearchNote(keywordSearch: String): LiveData<Result<List<Note>>>
-
-    suspend fun refreshNote()
-
-    suspend fun refreshNote(noteId: String)
-
-    suspend fun getNote(noteId: String): Result<Note>
+    fun observeSearchNote(keywordSearch: String): LiveData<List<Note>>
 
     suspend fun saveNote(note: Note)
 
@@ -27,5 +21,7 @@ interface NoteRepository {
 
     suspend fun deleteNote(noteId: String)
 
-    suspend fun deleteAllNote()
+    suspend fun refreshNote()
+
+    suspend fun getNote(noteId: String): Result<Note>
 }

@@ -7,10 +7,10 @@ import java.util.*
 
 @Entity(tableName = "note")
 data class Note @JvmOverloads constructor(
-    val title: String?,
-    val body: String,
-    val date: String,
-    val pin: Boolean = false,
+    @ColumnInfo(name = "title") var title: String?,
+    @ColumnInfo(name = "body") var body: String,
+    @ColumnInfo(name = "date") var date: Date,
+    @ColumnInfo(name = "pin") var pin: Boolean = false,
     @ColumnInfo(name = "encryption_key") val encryptionKey: String?,
-    @PrimaryKey var id: String = UUID.randomUUID().toString()
+    @PrimaryKey @ColumnInfo(name = "id")  val id: String = UUID.randomUUID().toString()
 )

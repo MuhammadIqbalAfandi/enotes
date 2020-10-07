@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -15,9 +17,9 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        android:onClick="@{() -> viewModel.openNote(note.id)}"
-        android:layout_marginVertical="@dimen/list_item_padding">
+        android:layout_marginHorizontal="@dimen/list_item_padding"
+        android:layout_marginBottom="@dimen/list_item_padding"
+        android:onClick="@{() -> viewModel.openNote(note.id)}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,23 +27,42 @@
             android:orientation="vertical"
             android:padding="@dimen/list_item_padding">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/list_item_padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                app:textDate="@{note.date}"
+                tools:text="@tools:sample/date/ddmmyy" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_title_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/list_item_padding"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{note.title}" />
+                android:text="@{note.title}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                tools:text="@tools:sample/lorem" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_body_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="@dimen/list_item_padding"
                 android:ellipsize="end"
+                android:maxLines="4"
                 android:text="@{note.body}"
-                android:maxLines="8" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="?android:textColorSecondary"
+                tools:text="@tools:sample/lorem/random" />
 
         </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
+
 </layout>

@@ -27,31 +27,8 @@ class NoteLocalDataSource internal constructor(
         }
     }
 
-    override fun observeSearchNote(keywordSearch: String): LiveData<Result<List<Note>>> {
-        return noteDao.observeSearchNote(keywordSearch).map {
-            Success(it)
-        }
-    }
-
-    override suspend fun getNote(): Result<List<Note>> = withContext(ioDispatcher) {
-        return@withContext try {
-            Success(noteDao.getNote())
-        } catch (e: Exception) {
-            Error(e)
-        }
-    }
-
-    override suspend fun getNote(noteId: String): Result<Note> = withContext(ioDispatcher) {
-        try {
-            val note = noteDao.getNoteById(noteId)
-            if (note != null) {
-                return@withContext Success(note)
-            } else {
-                return@withContext Error(Exception("Note not found!"))
-            }
-        } catch (e: Exception) {
-            return@withContext Error(e)
-        }
+    override fun observeSearchNote(keywordSearch: String): LiveData<List<Note>> {
+        return noteDao.observeSearchNote(keywordSearch)
     }
 
     override suspend fun saveNote(note: Note) = withContext(ioDispatcher) {
@@ -66,7 +43,28 @@ class NoteLocalDataSource internal constructor(
         noteDao.deleteNoteById(noteId)
     }
 
+    override suspend fun getNote(): Result<List<Note>> = withContext(ioDispatcher) {
+        return@withContext try {
+            Success(noteDao.getNote())
+        } catch (e: Exception) {
+            Error(e)
+        }
+    }
+
     override suspend fun deleteAllNote() = withContext(ioDispatcher) {
         noteDao.deleteNote()
+    }
+
+    override suspend fun getNote(noteId: String): Result<Note> = withContext(ioDispatcher) {
+        try {
+            val note = noteDao.getNoteById(noteId)
+            if (note != null) {
+                return@withContext Success(note)
+            } else {
+                return@withContext Error(Exception("Note not found!"))
+            }
+        } catch (e: Exception) {
+            return@withContext Error(e)
+        }
     }
 }

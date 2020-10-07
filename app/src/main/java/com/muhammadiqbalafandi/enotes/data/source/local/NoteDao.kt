@@ -7,6 +7,31 @@ import androidx.room.*
 interface NoteDao {
 
     /**
+     * Observes list of note.
+     *
+     * @return all note.
+     */
+    @Query("SELECT * FROM Note ORDER BY date DESC")
+    fun observeNote(): LiveData<List<Note>>
+
+    /**
+     * Observer a single note.
+     *
+     * @param noteId the note id.
+     * @return the note with noteId.
+     */
+    @Query("SELECT * FROM Note WHERE id = :noteId")
+    fun observerNoteById(noteId: String): LiveData<Note>
+
+    /**
+     *  Observer the note that search.
+     *
+     *  @return all note that search.
+     */
+    @Query("SELECT * FROM Note WHERE title LIKE :keywordSearch OR body LIKE :keywordSearch ORDER BY date DESC")
+    fun observeSearchNote(keywordSearch: String): LiveData<List<Note>>
+
+    /**
      * Insert a note in the database. if the note already exists, replace it.
      *
      * @param note the note to be inserted
@@ -32,43 +57,18 @@ interface NoteDao {
     suspend fun deleteNoteById(noteId: String): Int
 
     /**
-     * Delete all tasks.
-     */
-    @Query("DELETE FROM Note")
-    suspend fun deleteNote()
-
-    /**
-     *  Observer the note that search.
-     *
-     *  @return all note that search.
-     */
-    @Query("SELECT * FROM Note WHERE title LIKE :keywordSearch OR body LIKE :keywordSearch")
-    fun observeSearchNote(keywordSearch: String): LiveData<List<Note>>
-
-    /**
-     * Observes list of note.
-     *
-     * @return all note.
-     */
-    @Query("SELECT * FROM Note ORDER BY date DESC")
-    fun observeNote(): LiveData<List<Note>>
-
-    /**
-     * Observer a single note.
-     *
-     * @param noteId the note id.
-     * @return the note with noteId.
-     */
-    @Query("SELECT * FROM Note WHERE id = :noteId")
-    fun observerNoteById(noteId: String): LiveData<Note>
-
-    /**
      * Select all note from the note table.
      *
      * @return all note.
      */
     @Query("SELECT * FROM Note")
     suspend fun getNote(): List<Note>
+
+    /**
+     * Delete all notes.
+     */
+    @Query("DELETE FROM Note")
+    suspend fun deleteNote()
 
     /**
      * Select a note by id.

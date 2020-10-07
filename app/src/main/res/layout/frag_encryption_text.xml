@@ -4,9 +4,13 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionActionType" />
+
         <variable
             name="viewModel"
-            type="com.muhammadiqbalafandi.enotes.ui.encryptiontextnote.EncryptionTextViewModel" />
+            type="com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionTextViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,9 +18,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar_encryption_text"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_twotone_arrow_back" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -24,34 +43,33 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/activity_horizontal_margin"
-                    android:text="@string/about_privileges" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
+                    android:text="@string/about_title_encryption_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/activity_horizontal_margin"
-                    android:text="@string/about_encryption_key" />
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:text="@string/about_description_encryption_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/list_item_padding"
                     app:endIconMode="password_toggle"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     app:errorEnabled="true"
                     app:errorText="@{viewModel.errorText}">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/key"
+                        android:hint="@string/text_field_hint_key"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:singleLine="true"
@@ -62,19 +80,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> viewModel.generateKey()}"
-                    android:text="@string/button_generate_key" />
+                    android:text="@string/button_text_generate_key" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_import_encryption_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_import_key" />
+                    android:onClick="@{() -> viewModel.checkPermissionEvent(EncryptionActionType.IMPORT_KEY)}"
+                    android:text="@string/button_text_import_key" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_export_encryption_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_export_key" />
+                    android:enabled="@{viewModel.isEncryptionKeyAvailable}"
+                    android:onClick="@{() -> viewModel.checkPermissionEvent(EncryptionActionType.EXPORT_KEY)}"
+                    android:text="@string/button_text_export_key" />
 
             </LinearLayout>
 

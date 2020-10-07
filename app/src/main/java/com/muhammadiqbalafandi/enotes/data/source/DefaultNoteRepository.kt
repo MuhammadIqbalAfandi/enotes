@@ -21,19 +21,37 @@ class DefaultNoteRepository(
         return noteLocalDataSource.observerNote(noteId)
     }
 
-    override fun observeSearchNote(keywordSearch: String): LiveData<Result<List<Note>>> {
+    override fun observeSearchNote(keywordSearch: String): LiveData<List<Note>> {
         return noteLocalDataSource.observeSearchNote(keywordSearch)
+    }
+
+    override suspend fun saveNote(note: Note) {
+        coroutineScope {
+            launch { noteLocalDataSource.saveNote(note) }
+            // TODO: 01/10/20 added operation save from noteRemoteDataSource
+        }
+    }
+
+    override suspend fun updateNote(note: Note) {
+        coroutineScope {
+            launch { noteLocalDataSource.updateNote(note) }
+            // TODO: 01/10/20 added operation update from noteRemoteDataSource
+        }
+    }
+
+    override suspend fun deleteNote(noteId: String) {
+        coroutineScope {
+            launch { noteLocalDataSource.deleteNote(noteId) }
+            // TODO: 01/10/20 added operation delete from noteRemoteDataSource
+        }
     }
 
     override suspend fun refreshNote() {
         updateNoteFromRemoteDataSource()
     }
 
-    override suspend fun refreshNote(noteId: String) {
-        updateNoteFromRemoteDataSource(noteId)
-    }
-
     private suspend fun updateNoteFromRemoteDataSource() {
+        // TODO: 01/10/20 change to the actual remote data source
         val remoteNote = noteRemoteDataSource.getNote()
 
         if (remoteNote is Success) {
@@ -46,43 +64,7 @@ class DefaultNoteRepository(
         }
     }
 
-    private suspend fun  updateNoteFromRemoteDataSource(noteId: String) {
-        val remoteNote = noteRemoteDataSource.getNote(noteId)
-
-        if (remoteNote is Success) {
-            noteLocalDataSource.saveNote(remoteNote.data)
-        }
-    }
-
     override suspend fun getNote(noteId: String): Result<Note> {
         return noteLocalDataSource.getNote(noteId)
-    }
-
-    override suspend fun saveNote(note: Note) {
-        coroutineScope {
-            launch { noteLocalDataSource.saveNote(note) }
-            // TODO: added operation save from noteRemoteDataSource
-        }
-    }
-
-    override suspend fun updateNote(note: Note) {
-        coroutineScope {
-            launch { noteLocalDataSource.updateNote(note) }
-            // TODO: added operation delete from noteRemoteDataSource
-        }
-    }
-
-    override suspend fun deleteNote(noteId: String) {
-        coroutineScope {
-            launch { noteLocalDataSource.deleteNote(noteId) }
-            // TODO: added operation update from noteRemoteDataSource
-        }
-    }
-
-    override suspend fun deleteAllNote() {
-        coroutineScope {
-            launch { noteLocalDataSource.deleteAllNote() }
-            // TODO: added operation delete from noteRemoteDataSource
-        }
     }
 }

@@ -1,19 +1,25 @@
 package com.muhammadiqbalafandi.enotes.ui.note
 
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.muhammadiqbalafandi.enotes.EventObserver
 import com.muhammadiqbalafandi.enotes.R
 import com.muhammadiqbalafandi.enotes.databinding.FragNoteBinding
 import com.muhammadiqbalafandi.enotes.utils.getViewModelFactory
+import com.muhammadiqbalafandi.enotes.utils.hideKeyboard
 import com.muhammadiqbalafandi.enotes.utils.setupSnackbar
+import timber.log.Timber
 
 class NoteFragment : Fragment() {
 
@@ -30,6 +36,7 @@ class NoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewDataBinding = FragNoteBinding.inflate(inflater, container, false)
+        viewDataBinding.lifecycleOwner = viewLifecycleOwner
         viewDataBinding.viewModel = viewModel
         setHasOptionsMenu(true)
         return viewDataBinding.root
@@ -38,76 +45,65 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewDataBinding.lifecycleOwner = viewLifecycleOwner
         setupSnackbar()
         setupListAdapter()
-        setupNavigation()
+        setupObserver()
+        hideKeyboard()
+        hideFAB()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_note, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.menu_filter -> {
-                showFilteringPopUpMenu()
-                true
-            }
-            else -> false
-        }
-
-    private fun setupNavigation() {
-        viewModel.openNoteEvent.observe(viewLifecycleOwner, EventObserver {
-            openEditNote(it)
+    private fun setupObserver() {
+        viewModel.goToDetailNoteEvent.observe(viewLifecycleOwner, EventObserver { noteId ->
+            val action = NoteFragmentDirections.actionNoteFragmentToNoteDetailFragment(noteId)
+            findNavController().navigate(action)
         })
-        viewModel.addNewNote.observe(viewLifecycleOwner, EventObserver {
-            navigateToAddNewNote()
+        viewModel.goToAddNewNoteEvent.observe(viewLifecycleOwner, EventObserver {
+            val action = NoteFragmentDirections.actionNoteFragmentToAddEditNoteFragment(
+                null,
+                resources.getString(R.string.title_fragment_add_edit_note)
+            )
+            findNavController().navigate(action)
         })
-    }
-
-    private fun openEditNote(noteId: String) {
-        val action = NoteFragmentDirections.actionNoteFragmentToNoteDetailFragment(
-            noteId
-        )
-        findNavController().navigate(action)
+        viewModel.popupMenu.observe(viewLifecycleOwner, EventObserver { view ->
+            showFilteringPopUpMenu(view)
+        })
+        viewModel.goToActivitySettingEvent.observe(viewLifecycleOwner, EventObserver {
+            val action = NoteFragmentDirections.actionNoteFragmentToSettingsActivity()
+            findNavController().navigate(action)
+        })
+        viewModel.searchResult.observe(viewLifecycleOwner, Observer { listNote ->
+            listAdapter.submitList(listNote)
+        })
     }
 
     private fun setupListAdapter() {
         val viewModel = viewDataBinding.viewModel
+
+        val linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
         if (viewModel != null) {
             listAdapter = NoteAdapter(viewModel)
+            viewDataBinding.rvListNote.layoutManager = linearLayoutManager
             viewDataBinding.rvListNote.adapter = listAdapter
         } else {
-            // TODO: Replace with Timber
-            Log.w(
-                NoteFragment().tag,
-                "setupListAdapter: ViewModel not initialized when attempting to set up adapter."
-            )
+            Timber.d("setupListAdapter: ViewModel not initialized when attempting to set up adapter.")
         }
-    }
-
-    private fun navigateToAddNewNote() {
-        val action = NoteFragmentDirections.actionNoteFragmentToAddEditNoteFragment(
-            null,
-            resources.getString(R.string.new_note)
-        )
-        findNavController().navigate(action)
     }
 
     private fun setupSnackbar() {
-        view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        view?.setupSnackbar(
+            viewDataBinding.fabNote,
+            viewLifecycleOwner,
+            viewModel.snackbarText,
+            Snackbar.LENGTH_SHORT
+        )
         arguments?.let {
             viewModel.showEditResultMessage(args.userMessage)
-            // TODO: Replace with Timber
-            Log.d("ADDED", "setupSnackbar: ${args.userMessage}")
         }
     }
 
-    private fun showFilteringPopUpMenu() {
-        val view = activity?.findViewById<View>(R.id.menu_filter) ?: return
-        PopupMenu(requireContext(), view).run {
+    private fun showFilteringPopUpMenu(parent: View) {
+        PopupMenu(requireContext(), parent).run {
             menuInflater.inflate(R.menu.filter_note, menu)
 
             setOnMenuItemClickListener {
@@ -122,5 +118,19 @@ class NoteFragment : Fragment() {
             }
             show()
         }
+    }
+
+    // Hide Floating Action Button when recyclerview on scroll.
+    private fun hideFAB() {
+        viewDataBinding.rvListNote.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && viewDataBinding.fabNote.visibility == View.VISIBLE) {
+                    viewDataBinding.fabNote.hide()
+                } else if (dy < 0 && viewDataBinding.fabNote.visibility != View.VISIBLE) {
+                    viewDataBinding.fabNote.show()
+                }
+            }
+        })
     }
 }

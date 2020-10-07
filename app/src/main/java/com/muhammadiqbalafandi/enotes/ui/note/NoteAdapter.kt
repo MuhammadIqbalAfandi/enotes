@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.muhammadiqbalafandi.enotes.data.source.local.Note
 import com.muhammadiqbalafandi.enotes.databinding.ListItemNoteBinding
@@ -27,7 +26,7 @@ class NoteAdapter(private val viewModel: NoteViewModel) : ListAdapter<Note, Note
         holder.bind(viewModel, item)
     }
 
-    inner class NoteViewHolder (private val binding: ListItemNoteBinding) :
+    class NoteViewHolder (private val binding: ListItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(viewModel: NoteViewModel, item: Note) {
