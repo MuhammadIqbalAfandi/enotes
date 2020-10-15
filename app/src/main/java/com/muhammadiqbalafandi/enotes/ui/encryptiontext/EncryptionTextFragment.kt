@@ -19,7 +19,6 @@ import com.muhammadiqbalafandi.enotes.EventObserver
 import com.muhammadiqbalafandi.enotes.R
 import com.muhammadiqbalafandi.enotes.databinding.FragEncryptionTextBinding
 import com.muhammadiqbalafandi.enotes.utils.getViewModelFactory
-import com.muhammadiqbalafandi.enotes.utils.hideKeyboard
 import com.muhammadiqbalafandi.enotes.utils.setupBackNavigation
 import com.muhammadiqbalafandi.enotes.utils.setupSnackbar
 
@@ -122,7 +121,7 @@ class EncryptionTextFragment : Fragment() {
         view?.setupSnackbar(
             requireView(),
             viewLifecycleOwner,
-            viewModel.snackbarText,
+            viewModel.snackbarTextEvent,
             Snackbar.LENGTH_SHORT
         )
     }

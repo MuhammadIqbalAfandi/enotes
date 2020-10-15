@@ -62,7 +62,6 @@ class NoteDetailFragment : Fragment() {
 
         viewModel.start(args.noteId)
         setupNavigationView()
-        setupSnackbar()
         setupObserver()
         hideKeyboard()
     }
@@ -90,7 +89,6 @@ class NoteDetailFragment : Fragment() {
 
         if (resultCode == Activity.RESULT_OK && resultData != null) {
             val uri = resultData.data
-
             if (requestCode == REQUEST_CODE_IMPORT_FILE) {
                 viewModel.importFileText(uri)
             }
@@ -123,15 +121,6 @@ class NoteDetailFragment : Fragment() {
         val navViewDataBinding = NavHeaderDetailNoteBinding.bind(viewDataBinding.navViewDetailNote.getHeaderView(0))
         navViewDataBinding.lifecycleOwner = viewLifecycleOwner
         navViewDataBinding.viewModel = viewModel
-    }
-
-    private fun setupSnackbar() {
-        view?.setupSnackbar(
-            requireView(),
-            viewLifecycleOwner,
-            viewModel.snackbarText,
-            Snackbar.LENGTH_SHORT
-        )
     }
 
     private fun showDialogDecryptionNote() {

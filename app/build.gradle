@@ -1,27 +1,80 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+/**
+ * The first line in the build configuration applies the Android plugin for
+ * Gradle to this build and makes the android block available to specify
+ * Android-specific build options.
+ */
+
+apply plugin: "com.android.application"
+
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
+apply plugin: "kotlin-kapt"
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
-    compileSdkVersion 29
+
+    /**
+     * compileSdkVersion specifies the Android API level Gradle should use to
+     * compile your app. This means your app can use the API features included in
+     * this API level and lower.
+     */
+
+    compileSdkVersion rootProject.compileSdkVersion
+
+    /**
+     * buildToolsVersion specifies the version of the SDK build tools, command-line
+     * utilities, and compiler that Gradle should use to build your app. You need to
+     * download the build tools using the SDK Manager.
+     *
+     * This property is optional because the plugin uses a recommended version of
+     * the build tools by default.
+     */
+
     buildToolsVersion "29.0.3"
 
     defaultConfig {
+
+        /**
+         * applicationId uniquely identifies the package for publishing.
+         * However, your source code should still reference the package name
+         * defined by the package attribute in the main/AndroidManifest.xml file.
+         */
+
         applicationId "com.muhammadiqbalafandi.enotes"
-        minSdkVersion 23
-        targetSdkVersion 29
+
+        // Defines the minimum API level required to run the app.
+        minSdkVersion rootProject.minSdkVersion
+
+        // Specifies the API level used to test the app.
+        targetSdkVersion rootProject.targetSdkVersion
+
+        // Defines the version number of your app.
         versionCode 1
+
+        // Defines a user-friendly version name for your app.
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    /**
+     * The buildTypes block is where you can configure multiple build types.
+     * By default, the build system defines two build types: debug and release. The
+     * debug build type is not explicitly shown in the default build configuration,
+     * but it includes debugging tools and is signed with the debug key. The release
+     * build type applies Proguard settings and is not signed by default.
+     */
+
     buildTypes {
+
+        /**
+         * By default, Android Studio configures the release build type to enable code
+         * shrinking, using minifyEnabled, and specifies the default Proguard rules file.
+         */
+
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true // Enables code shrinking for the release build type.
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 
@@ -31,7 +84,7 @@ android {
     }
     
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "1.8"
     }
 
     buildFeatures{
@@ -39,49 +92,53 @@ android {
     }
 }
 
+/**
+ * The dependencies block in the module-level build configuration file
+ * specifies dependencies required to build only the module itself.
+ * To learn more, go to Add build dependencies.
+ */
+
 dependencies {
+    implementation project(":encryption")
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 
     // Kotlin KTX
-    implementation "androidx.core:core-ktx:$core_version"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    // Testing
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    // Timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
 
     // Room components
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
     // Optional - Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-ktx:$roomVersion"
 
     // View Model, Live Data components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
 
     // Navigation components
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
     // Setting preference
-    implementation "androidx.preference:preference:$preference_version"
+    implementation "androidx.preference:preference:$preferenceVersion"
 
     // Material design
-    implementation "com.google.android.material:material:1.2.1"
+    implementation "com.google.android.material:material:$materialDesignVersion"
 
     // Recyclerview
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
-
-    // Encryption text
-    implementation 'com.github.MuhammadIqbalAfandi:Classic-Cryptography-Algorithm:0.2.1-alpha'
+    implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
 
     // TedPermission
-    implementation 'gun0912.ted:tedpermission:2.2.3'
+    implementation "gun0912.ted:tedpermission:$tedPermissionVersion"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // Testing
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

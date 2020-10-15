@@ -83,9 +83,9 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/search_note"
-                        android:layout_marginTop="@dimen/list_item_padding"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/list_item_padding"
                         app:endIconMode="clear_text"
                         app:hintEnabled="false"
                         app:layout_constraintTop_toBottomOf="@+id/btn_filter_note"
@@ -118,7 +118,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"

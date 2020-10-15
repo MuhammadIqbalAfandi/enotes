@@ -21,6 +21,7 @@ import java.util.*
 
 class EncryptionTextViewModel(application: Application) : AndroidViewModel(application) {
 
+    // Used in this class.
     private val context: Application = getApplication()
 
     private var sharedPreferences: SharedPreferences =
@@ -28,34 +29,30 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
             ENCRYPTION_KEY_PREFERENCES, Activity.MODE_PRIVATE
         )
 
+    private val oldEncryptionKey: MutableLiveData<String> = MutableLiveData()
+
+    private val _encryptionKeyError: MutableLiveData<Int> = MutableLiveData()
+    val encryptionKeyError: LiveData<Int> = _encryptionKeyError
+
     /**
      * Used directly in [FragEncryptionTextBinding].
      */
-    val encryptionKey = MutableLiveData<String>()
+    val encryptionKey: MutableLiveData<String> = MutableLiveData()
 
     // Hide button export when encryption key null, empty or all white space.
     val isEncryptionKeyAvailable: LiveData<Boolean> = encryptionKey.map {
-        if (it !== null) {
-            !isStringAllWhiteSpace(it)
-        } else {
-            false
-        }
+        it?.isNotBlank() ?: false
     }
 
-    private val oldEncryptionKey = MutableLiveData<String>()
-
-    private val _errorText = MutableLiveData<Int>()
-    val errorText: LiveData<Int> = _errorText
-
     // Used in fragments, to listen for changes.
-    private val _checkPermissionEvent = MutableLiveData<Event<EncryptionActionType>>()
+    private val _checkPermissionEvent: MutableLiveData<Event<EncryptionActionType>> = MutableLiveData()
     val checkPermissionEvent: LiveData<Event<EncryptionActionType>> = _checkPermissionEvent
 
-    private val _goToAddEditNoteEvent = MutableLiveData<Event<Int>>()
+    private val _goToAddEditNoteEvent: MutableLiveData<Event<Int>> = MutableLiveData()
     val goToAddEditNoteEvent: LiveData<Event<Int>> = _goToAddEditNoteEvent
 
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
+    private val _snackbarTextEvent: MutableLiveData<Event<Int>> = MutableLiveData()
+    val snackbarTextEvent: LiveData<Event<Int>> = _snackbarTextEvent
 
     fun start(encryptionKey: String?) {
         this.encryptionKey.value = encryptionKey
@@ -68,21 +65,13 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
     fun generateKey() {
         this.encryptionKey.value = UUID.randomUUID().toString()
 
-        this._errorText.value = null
+        this._encryptionKeyError.value = null
     }
 
-    fun restoreKey() {
-        this.encryptionKey.value = this.oldEncryptionKey.value
-    }
-
-    /**
-     * Used directly in [FragEncryptionTextBinding]
-     */
     fun checkPermissionEvent(actionType: EncryptionActionType) {
         this._checkPermissionEvent.value = Event(actionType)
     }
 
-    // To get file from disk.
     fun importFileText(uri: Uri?) {
         try {
             if (uri != null) {
@@ -98,12 +87,11 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
                 }
             }
         } catch (e: Exception) {
-            // TODO: 8/8/20 ERROR : Always return null when import key that empty content.
+            // TODO: 8/8/20 Error always return null when import key that empty content.
             Timber.e(e)
         }
     }
 
-    // Used to saved file in disk.
     fun exportFileText(uri: Uri?) {
         val encryptionKey = this.encryptionKey.value
 
@@ -115,9 +103,7 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
                 if (outputStream != null) {
                     val outputStreamWriter = OutputStreamWriter(outputStream)
                     val bufferedWriter = BufferedWriter(outputStreamWriter)
-                    /**
-                     * Enter [encryptionKey] to save in the .txt format.
-                     */
+                    // Enter encryption key to save in the .txt format.
                     bufferedWriter.write(encryptionKey)
                     bufferedWriter.close()
 
@@ -129,6 +115,10 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
+    fun restoreKey() {
+        this.encryptionKey.value = this.oldEncryptionKey.value
+    }
+
     fun exit() {
         if (this.encryptionKey.value.isNullOrEmpty()) {
             this.encryptionKey.value = null
@@ -137,15 +127,14 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
         val currentEncryptionKey = this.encryptionKey.value
         val oldEncryptionKey = this.oldEncryptionKey.value
 
-        // Check whether encryption key all white space.
         if (currentEncryptionKey != null) {
-            if (isStringAllWhiteSpace(currentEncryptionKey)) {
-                this._errorText.value = R.string.message_error_all_white_space
+            if (currentEncryptionKey.isBlank()) {
+                this._encryptionKeyError.value = R.string.message_error_all_white_space
                 return
             }
-        }
 
-        this._errorText.value = null
+            this._encryptionKeyError.value = null
+        }
 
         if (currentEncryptionKey != oldEncryptionKey) {
             when {
@@ -165,21 +154,15 @@ class EncryptionTextViewModel(application: Application) : AndroidViewModel(appli
         this._goToAddEditNoteEvent.value = Event(NOTHING_ALERT_DIALOG)
     }
 
-    private fun isStringAllWhiteSpace(str: String): Boolean {
-        // Remove the leading whitespaces using trim()
-        // and then check if this string is empty
-        return str.trim().isEmpty()
-    }
-
     private fun showSnackbarMessage(@StringRes message: Int) {
-        this._snackbarText.value = Event(message)
+        this._snackbarTextEvent.value = Event(message)
     }
 
     fun saveEncryptionText() {
-        sharedPreferences.edit()
+        this.sharedPreferences.edit()
             .putString(ENCRYPTION_KEY_SAVED_STATE_KEY, this.encryptionKey.value)
             .apply()
-        this._errorText.value = null
+        this._encryptionKeyError.value = null
     }
 }
 

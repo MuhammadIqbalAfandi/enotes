@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,9 +15,6 @@ import com.muhammadiqbalafandi.enotes.EventObserver
 import com.muhammadiqbalafandi.enotes.R
 import com.muhammadiqbalafandi.enotes.databinding.FragAddEditNoteBinding
 import com.muhammadiqbalafandi.enotes.databinding.NavHeaderAddEditNoteBinding
-import com.muhammadiqbalafandi.enotes.ui.encryptiontext.ENCRYPTION_KEY_SAVED_STATE_KEY
-import com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionActionType
-import com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionTextViewModel
 import com.muhammadiqbalafandi.enotes.utils.getViewModelFactory
 import com.muhammadiqbalafandi.enotes.utils.hideKeyboard
 import com.muhammadiqbalafandi.enotes.utils.setupSnackbar
@@ -94,7 +90,7 @@ class AddEditNoteFragment : Fragment() {
         view?.setupSnackbar(
             viewDataBinding.fabAddEditNote,
             viewLifecycleOwner,
-            viewModel.snackbarText,
+            viewModel.snackbarTextEvent,
             Snackbar.LENGTH_SHORT
         )
     }

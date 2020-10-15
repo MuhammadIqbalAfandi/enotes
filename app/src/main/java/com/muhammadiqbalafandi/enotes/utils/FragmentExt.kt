@@ -5,12 +5,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import com.muhammadiqbalafandi.enotes.NoteApplication
 import com.muhammadiqbalafandi.enotes.ViewModelFactory
 import com.muhammadiqbalafandi.enotes.data.ServiceLocator
 import org.jetbrains.annotations.NotNull
 
 fun Fragment.getViewModelFactory(): ViewModelFactory {
-    val repository = ServiceLocator.provideNoteRepository(requireContext())
+    val repository = (requireContext().applicationContext as NoteApplication).noteRepository
     return ViewModelFactory(repository, requireActivity().application, this)
 }
 

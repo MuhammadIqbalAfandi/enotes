@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <import type="com.muhammadiqbalafandi.enotes.ui.encryptiontext.EncryptionActionType" />
 
         <variable
@@ -64,7 +62,7 @@
                     android:layout_marginVertical="@dimen/list_item_padding"
                     app:endIconMode="password_toggle"
                     app:errorEnabled="true"
-                    app:errorText="@{viewModel.errorText}">
+                    app:errorText="@{viewModel.encryptionKeyError}">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"

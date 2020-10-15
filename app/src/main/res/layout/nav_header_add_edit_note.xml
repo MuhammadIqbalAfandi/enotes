@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <import type="androidx.core.content.ContextCompat" />
 
         <variable
@@ -64,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> viewModel.showDialogDeleteNote()}"
                 android:text="@string/menu_title_delete_note"
+                android:visibility="@{viewModel.isDeletedNoteAvailable() ? View.VISIBLE : View.GONE}"
                 android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 app:icon="@drawable/ic_twotone_delete"

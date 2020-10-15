@@ -1,7 +1,7 @@
 package com.muhammadiqbalafandi.enotes.utils
 
-import com.muhammadiqbalafandi.classiccryptographyalgorithm.algorithm.AtbashCipher
-import com.muhammadiqbalafandi.classiccryptographyalgorithm.algorithm.VigenereCipher
+import com.muhammadiqbalafandi.encryption.algorithm.AtbashCipher
+import com.muhammadiqbalafandi.encryption.algorithm.VigenereCipher
 
 object Utils {
     fun encryptionText(text: String, key: String): String {

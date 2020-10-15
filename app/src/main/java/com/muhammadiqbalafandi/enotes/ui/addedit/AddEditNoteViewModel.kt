@@ -25,6 +25,7 @@ class AddEditNoteViewModel(
     private val noteRepository: NoteRepository, application: Application
 ) : AndroidViewModel(application) {
 
+    // Used in this class.
     private val context: Application = getApplication()
 
     private var sharedPreferences: SharedPreferences =
@@ -32,7 +33,7 @@ class AddEditNoteViewModel(
             ENCRYPTION_KEY_PREFERENCES, Activity.MODE_PRIVATE
         )
 
-    private val _noteId = MutableLiveData<String>()
+    private val noteId: MutableLiveData<String> = MutableLiveData()
 
     private val time: Date = Calendar.getInstance().time
 
@@ -43,13 +44,14 @@ class AddEditNoteViewModel(
     /**
      * Used directly in [FragAddEditNoteBinding].
      */
-    val title = MutableLiveData<String>()
+    val title: MutableLiveData<String> = MutableLiveData()
 
-    val body = MutableLiveData<String>()
+    val body: MutableLiveData<String> = MutableLiveData()
 
-    private val pin = MutableLiveData(false)
+    private val pin: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    val encryptionKey = MutableLiveData<String>()
+    private val _encryptionKey: MutableLiveData<String> = MutableLiveData()
+    val encryptionKey: LiveData<String> = _encryptionKey
 
     /**
      * Used directly in [NavHeaderAddEditNoteBinding].
@@ -59,25 +61,29 @@ class AddEditNoteViewModel(
         if (it) R.string.menu_title_unpin else R.string.menu_title_pin
     }
 
-    val encryptionStringRes: LiveData<Int> = encryptionKey.map {
-        if (!it.isNullOrEmpty()) R.string.menu_title_encryption_text_active else R.string.menu_title_encryption_text
+    val encryptionStringRes: LiveData<Int> = _encryptionKey.map {
+        if (!it.isNullOrBlank()) R.string.menu_title_encryption_text_active else R.string.menu_title_encryption_text
+    }
+
+    val isDeletedNoteAvailable: LiveData<Boolean> = noteId.map {
+        !it.isNullOrBlank()
     }
 
     // Used in fragment, to listen changes.
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
+    private val _snackbarTextEvent: MutableLiveData<Event<Int>> = MutableLiveData()
+    val snackbarTextEvent: LiveData<Event<Int>> = _snackbarTextEvent
 
-    private val _goToEncryptionNoteEvent = MutableLiveData<Event<Unit>>()
+    private val _goToEncryptionNoteEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val goToEncryptionNoteEvent: LiveData<Event<Unit>> = _goToEncryptionNoteEvent
 
-    private val _goToListNoteEvent = MutableLiveData<Event<Int>>()
+    private val _goToListNoteEvent: MutableLiveData<Event<Int>> = MutableLiveData()
     val goToListNoteEvent: LiveData<Event<Int>> = _goToListNoteEvent
 
-    private val _showDialogDeleteNoteEvent = MutableLiveData<Event<Unit>>()
+    private val _showDialogDeleteNoteEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val showDialogDeleteNoteEvent: LiveData<Event<Unit>> = _showDialogDeleteNoteEvent
 
     fun start(noteId: String?) {
-        this._noteId.value = noteId
+        this.noteId.value = noteId
 
         if (noteId == null) {
             // No need to populate, it's a new note
@@ -118,58 +124,55 @@ class AddEditNoteViewModel(
 
     private fun noteDecryption(noteResult: Note) {
         val body = noteResult.body
-        val encryptionKey = noteResult.encryptionKey!!
-        viewModelScope.launch {
-            // Result note decryption.
-            val decryptedBody = Utils.decryptionText(body, encryptionKey)
-
+        val encryptionKey = noteResult.encryptionKey
+        encryptionKey?.run {
+            val decryptedBody = Utils.decryptionText(body, this)
             onNotesLoaded(noteResult, decryptedBody)
         }
     }
 
     private fun onNotesLoaded(noteResult: Note, decryptedBody: String?) {
-        title.value = noteResult.title
-        body.value = decryptedBody ?: noteResult.body
-        pin.value = noteResult.pin
-        encryptionKey.value = noteResult.encryptionKey
+        this.title.value = noteResult.title
+        this.body.value = decryptedBody ?: noteResult.body
+        this.pin.value = noteResult.pin
+        this._encryptionKey.value = noteResult.encryptionKey
 
-        isDataLoaded = true
+        this.isDataLoaded = true
     }
 
     /**
      * Used directly in [NavHeaderAddEditNoteBinding].
      */
     fun pin() {
-        pin.value = !pin.value!!
+        this.pin.value = this.pin.value?.run { !this }
     }
 
     fun goToEncryptionNote() {
-        _goToEncryptionNoteEvent.value = Event(Unit)
+        this._goToEncryptionNoteEvent.value = Event(Unit)
     }
 
     fun showDialogDeleteNote() {
-        _showDialogDeleteNoteEvent.value = Event(Unit)
+        this._showDialogDeleteNoteEvent.value = Event(Unit)
     }
 
-    // User agree to delete note.
     fun agreeDeletedNote() {
         deleteNote()
     }
 
     private fun deleteNote() = viewModelScope.launch {
-        _noteId.value?.let {
+        noteId.value?.let {
             noteRepository.deleteNote(it)
             goToListNote(DELETE_RESULT_OK)
         }
     }
 
     fun saveNote() {
-        val title = title.value
-        val body = body.value
-        val time = time
-        val pin = pin.value ?: false
-        val encryptionKey = encryptionKey.value
-        val id = _noteId.value
+        val title = this.title.value
+        val body = this.body.value
+        val time = this.time
+        val pin = this.pin.value ?: false
+        val encryptionKey = this._encryptionKey.value
+        val id = this.noteId.value
 
         if (body.isNullOrBlank()) {
             showSnackbarMessage(R.string.message_error_no_body)
@@ -184,7 +187,7 @@ class AddEditNoteViewModel(
             }
         }
 
-        if (isNewNote || id == null) {
+        if (this.isNewNote || id == null) {
             val note = Note(title, encryptionText(), time, pin, encryptionKey)
             createNote(note)
         } else {
@@ -194,42 +197,36 @@ class AddEditNoteViewModel(
     }
 
     private fun createNote(note: Note) = viewModelScope.launch {
-        // Connected to the database to store data.
         noteRepository.saveNote(note)
 
         goToListNote(ADD_RESULT_OK)
     }
 
     private fun updateNote(note: Note) {
-        if (isNewNote) {
+        if (this.isNewNote) {
             throw RuntimeException("updateNote() was called but note is new.")
         }
         viewModelScope.launch {
-            // Connected to the database to store data.
             noteRepository.saveNote(note)
 
             goToListNote(EDIT_RESULT_OK)
         }
     }
 
-    /**
-     * Get encryption key value  that saved,
-     * when back from [com.muhammadiqbalafandi.enotes.ui.encryptiontext].
-     */
+    private fun goToListNote(resultCode: Int) {
+        this._goToListNoteEvent.value = Event(resultCode)
+    }
+
     fun getSavedEncryptionKey() {
-        val sharedPrefResult = sharedPreferences.getString(ENCRYPTION_KEY_SAVED_STATE_KEY, null)
-        this.encryptionKey.value = sharedPrefResult
+        val sharedPrefResult = this.sharedPreferences.getString(ENCRYPTION_KEY_SAVED_STATE_KEY, null)
+        this._encryptionKey.value = sharedPrefResult
     }
 
     fun clearEncryptionKey() {
-        sharedPreferences.edit().clear().apply()
-    }
-
-    private fun goToListNote(resultCode: Int) {
-        _goToListNoteEvent.value = Event(resultCode)
+        this.sharedPreferences.edit().clear().apply()
     }
 
     private fun showSnackbarMessage(@StringRes message: Int) {
-        _snackbarText.value = Event(message)
+        this._snackbarTextEvent.value = Event(message)
     }
 }

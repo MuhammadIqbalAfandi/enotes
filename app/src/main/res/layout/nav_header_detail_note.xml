@@ -53,7 +53,7 @@
                 android:text="@string/menu_title_decryption_note"
                 android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:visibility="@{viewModel.isDecryptionNote ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.isDecryptionNoteAvailable ? View.VISIBLE : View.GONE}"
                 app:icon="@drawable/ic_twotone_lock"
                 app:iconGravity="end" />
 
