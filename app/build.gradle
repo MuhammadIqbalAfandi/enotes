@@ -133,7 +133,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
 
     // TedPermission
-    implementation "gun0912.ted:tedpermission:$tedPermissionVersion"
+    implementation "io.github.ParkSangGwon:tedpermission-normal:3.4.2"
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"

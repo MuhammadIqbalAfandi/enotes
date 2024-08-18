@@ -15,7 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
+import com.gun0912.tedpermission.normal.TedPermission
 import com.muhammadiqbalafandi.enotes.EventObserver
 import com.muhammadiqbalafandi.enotes.R
 import com.muhammadiqbalafandi.enotes.databinding.FragDetailNoteBinding
@@ -143,7 +143,7 @@ class NoteDetailFragment : Fragment() {
             }
         }
 
-        TedPermission.with(context)
+        TedPermission.create()
             .setPermissionListener(permissionListener)
             .setDeniedTitle(R.string.permission_title_storage)
             .setDeniedMessage(R.string.permission_description_storage)
